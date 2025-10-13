@@ -7,5 +7,16 @@
     </head>
     <body>
         <h1 class="text-center">X-Ray Classifier</h1>
+
+        <form class="p-3 text-center" action='/', method="post" enctype="multipart/form-data">
+        <input class="form-control" type="file" name="imagefile" >
+        <input class="btn btn-primary mt-3"type="submit" value="Predict Image" >
+
+
+        {% if prediction %}
+            <p class="text-center"> Image is a {{prediction}}</p>
+        {% endif %}
+
+        </form>
     </body>
 </html>
