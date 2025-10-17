@@ -1,45 +1,48 @@
 import os
-
-from flask import Flask, render_template, request
-from keras.models import load_model
-from keras.preprocessing import image
+from flask import Flask, render_template, request, send_from_directory
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
 import numpy as np
 
 app = Flask(__name__)
 
+UPLOAD_FOLDER = os.path.join(app.root_path, 'images')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+print("Upload folder path:", UPLOAD_FOLDER)
+
 model = load_model('model.h5')
 
-class_labels = ['covid', 'normal', 'pneumonia', 'tuberculosis']
-
 @app.route('/', methods=['GET'])
-def home():
+def index():
     return render_template('index.html')
 
 @app.route('/', methods=['POST'])
 def predict():
-
-    if not os.path.exists('./images'):
-        os.makedirs('./images')
-
     imagefile = request.files['imagefile']
-    image_path = os.path.join('./images', imagefile.filename)
+
+    if imagefile.filename == '':
+        return render_template('index.html', error="No file selected")
+
+    image_path = os.path.join(UPLOAD_FOLDER, imagefile.filename)
     imagefile.save(image_path)
 
+    # Preprocess and predict
     img = image.load_img(image_path, target_size=(224, 224))
     img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = img_array / 255.0  # normalize pixel values
+    img_array = np.expand_dims(img_array, axis=0) / 255.0
 
-    yhat  = model.predict(img_array)
-    predicted_class = np.argmax(yhat, axis=1)[0]
-    predicted_label = class_labels[predicted_class]
-    confidence = np.max(yhat) * 100
+    preds = model.predict(img_array)
+    classes = ['COVID-19', 'Normal', 'Pneumonia', 'Tuberculosis']
+    predicted_class = classes[np.argmax(preds)]
+    confidence = round(np.max(preds) * 100, 2)
 
-    classification = f"{predicted_label} ({confidence:.2f}%)"
+    return render_template('index.html',
+                           filename=imagefile.filename,
+                           prediction=f"{predicted_class} ({confidence}%)")
 
-    return render_template('index.html', prediction=classification)
-
+@app.route('/images/<filename>')
+def send_image(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
-

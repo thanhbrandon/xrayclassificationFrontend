@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Initial Commit">
+    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Updates Frontend to add image upload&#10;Updates app.py to import model and process image">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/xrayclassificationFrontend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/xrayclassificationFrontend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
@@ -101,7 +100,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760162262659</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updates Frontend to add image upload&#10;Updates app.py to import model and process image">
+      <option name="closed" value="true" />
+      <created>1760331381574</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1760331381574</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -117,6 +124,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Updates Frontend to add image upload&#10;Updates app.py to import model and process image" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updates Frontend to add image upload&#10;Updates app.py to import model and process image" />
   </component>
 </project>
