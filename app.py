@@ -13,10 +13,10 @@ print("Upload folder path:", UPLOAD_FOLDER)
 
 currentDirectory = os.path.dirname(os.path.abspath(__file__))
 def init_db():
-    connection = sqlite3.connect(os.path.join(currentDirectory, "prediction.db"))
+    connection = sqlite3.connect(os.path.join(currentDirectory, "predictions.db"))
     cursor = connection.cursor()
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS prediction (
+        CREATE TABLE IF NOT EXISTS predictions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             filename TEXT,
             predicted_class TEXT,
@@ -56,6 +56,18 @@ def predict():
     classes = ['COVID-19', 'Normal', 'Pneumonia', 'Tuberculosis']
     predicted_class = classes[np.argmax(preds)]
     confidence = round(np.max(preds) * 100, 2)
+
+    correct_prediction = True
+    correct_class = "normal"
+
+    connection = sqlite3.connect(os.path.join(currentDirectory, "predictions.db"))
+    cursor = connection.cursor()
+    cursor.execute("""
+        INSERT INTO predictions (filename, predicted_class, confidence, correct_prediction, correct_class)
+        VALUES (?, ?, ?, ?, ?)
+    """, (imagefile.filename, predicted_class, confidence, int(correct_prediction), correct_class))
+    connection.commit()
+    connection.close()
 
     return render_template('index.html',
                            filename=imagefile.filename,

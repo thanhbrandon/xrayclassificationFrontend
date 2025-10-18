@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Updates Frontend to include picture of uploaded image">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Adds db initialization">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/xrayclassificationFrontend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/xrayclassificationFrontend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -118,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760676023234</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Adds db initialization">
+      <option name="closed" value="true" />
+      <created>1760828053825</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1760828053825</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -136,6 +142,7 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Updates Frontend to add image upload&#10;Updates app.py to import model and process image" />
     <MESSAGE value="Updates Frontend to include picture of uploaded image" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updates Frontend to include picture of uploaded image" />
+    <MESSAGE value="Adds db initialization" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adds db initialization" />
   </component>
 </project>
