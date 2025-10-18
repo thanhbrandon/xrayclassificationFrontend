@@ -3,12 +3,33 @@ from flask import Flask, render_template, request, send_from_directory
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
+import sqlite3
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'images')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 print("Upload folder path:", UPLOAD_FOLDER)
+
+currentDirectory = os.path.dirname(os.path.abspath(__file__))
+def init_db():
+    connection = sqlite3.connect(os.path.join(currentDirectory, "prediction.db"))
+    cursor = connection.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS prediction (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT,
+            predicted_class TEXT,
+            confidence REAL,
+            correct_prediction INTEGER,
+            correct_class TEXT
+        )
+    """)
+    connection.commit()
+    connection.close()
+
+# Initialize database when app starts
+init_db()
 
 model = load_model('model.h5')
 
