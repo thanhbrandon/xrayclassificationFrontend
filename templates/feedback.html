@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Feedback</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
+    .container { max-width: 700px; background: white; padding: 25px; border-radius: 10px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    button { background-color: #2d89ef; color: white; border: none; padding: 10px 16px; border-radius: 5px; cursor: pointer; margin: 6px; }
+    button:hover { background-color: #1b6edb; }
+    select { padding: 8px; margin-top: 8px; }
+    .error { color: red; margin-top: 10px; }
+    .correction { display:none; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Prediction Feedback</h1>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <p><strong>Prediction:</strong> {{ prediction }} ({{ confidence }}%)</p>
+    <img src="{{ url_for('send_image', filename=filename) }}" alt="Uploaded X-ray" style="max-width:100%; border-radius:8px;">
+
+    <form id="feedbackForm" action="/feedback" method="post">
+      <input type="hidden" name="filename" value="{{ filename }}">
+      <input type="hidden" name="prediction" value="{{ prediction }}">
+      <input type="hidden" name="confidence" value="{{ confidence }}">
+
+      <p>Was this prediction correct?</p>
+      <button type="submit" name="feedback" value="yes" id="yesBtn">✅ Yes</button>
+      <button type="button" id="noBtn">❌ No</button>
+
+      <div id="correctionSection" class="correction" aria-hidden="true">
+        <label for="correct_class">Select the correct class:</label><br>
+        <select name="correct_class" id="correct_class" disabled>
+          <option value="">-- Select class --</option>
+          <option value="COVID-19">COVID-19</option>
+          <option value="Normal">Normal</option>
+          <option value="Pneumonia">Pneumonia</option>
+          <option value="Tuberculosis">Tuberculosis</option>
+        </select>
+        <br><br>
+        <button type="submit" name="feedback" value="no" id="submitCorrection">Submit Correction</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const correctionSection = document.getElementById('correctionSection');
+    const correctSelect = document.getElementById('correct_class');
+
+    noBtn.addEventListener('click', function () {
+      correctionSection.style.display = 'block';
+      correctionSection.setAttribute('aria-hidden', 'false');
+      correctSelect.disabled = false;
+      correctSelect.focus();
+    });
+
+    // defensive: keep select disabled until user clicks No
+    window.addEventListener('load', function () {
+      correctSelect.disabled = true;
+    });
+  </script>
+</body>
+</html>

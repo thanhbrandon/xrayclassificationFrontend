@@ -1,36 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Chest X-ray Classifier</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chest X-Ray Classifier</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
+    .container { max-width: 600px; background: white; padding: 25px; border-radius: 10px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    button { background-color: #2d89ef; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #1b6edb; }
+  </style>
 </head>
 <body>
-  <div style="display: flex; justify-content: center; align-items: center;">
-    <h1>Upload a Chest X-ray</h1>
-  </div>
+  <div class="container">
+    <h1>Chest X-Ray Classifier</h1>
 
-    <form action="/" method="POST" enctype="multipart/form-data">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <input type="file" name="imagefile" required>
-      </div>
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <input type="submit" value="Predict">
-      </div>
-    </form>
-
-  <div style="display: flex; justify-content: center; align-items: center;">
     {% if error %}
-      <p style="color:red;">{{ error }}</p>
+      <p style="color: red;">{{ error }}</p>
     {% endif %}
+    {% if message %}
+      <p style="color: green;">{{ message }}</p>
+    {% endif %}
+
+    <form action="/" method="post" enctype="multipart/form-data">
+      <input type="file" name="imagefile" accept="image/*" required>
+      <br><br>
+      <button type="submit">Predict</button>
+    </form>
   </div>
-
-    {% if filename %}
-      <div style="display: flex; justify-content: center; align-items: center;">
-          <img src="{{ url_for('send_image', filename=filename) }}" width="300">
-      </div>
-      <div style="display: flex; justify-content: center; align-items: center;">
-          <h2>Prediction: {{ prediction }}</h2>
-      </div>
-    {% endif %}
-
 </body>
 </html>
