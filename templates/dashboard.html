@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
+    table { margin: 20px auto; border-collapse: collapse; width: 90%; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    th { background-color: #2d89ef; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    a button { background-color: #2d89ef; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+    a button:hover { background-color: #1b6edb; }
+  </style>
+</head>
+<body>
+  <h1>📊 Prediction Dashboard</h1>
+  <table>
+    <tr>
+      <th>Filename</th>
+      <th>Prediction</th>
+      <th>Confidence (%)</th>
+      <th>Correct?</th>
+      <th>Correct Class</th>
+      <th>Timestamp</th>
+    </tr>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ '✅' if row[3] == 1 else ('❌' if row[3] == 0 else '-') }}</td>
+      <td>{{ row[4] if row[4] else '-' }}</td>
+      <td>{{ row[5] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <a href="{{ url_for('index') }}">
+    <button type="button">⬅️ Back to Upload</button>
+  </a>
+</body>
+</html>

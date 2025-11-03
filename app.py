@@ -25,7 +25,8 @@ def init_db():
                 predicted_class TEXT,
                 confidence REAL,
                 correct_prediction INTEGER,
-                correct_class TEXT
+                correct_class TEXT,
+                timestamp DATETIME 
             )
         """)
         connection.commit()
@@ -70,8 +71,8 @@ def predict():
     with sqlite3.connect(DB_PATH) as connection:
         cursor = connection.cursor()
         cursor.execute("""
-            INSERT INTO predictions (filename, predicted_class, confidence, correct_prediction, correct_class)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO predictions (filename, predicted_class, confidence, correct_prediction, correct_class, timestamp)
+            VALUES (?, ?, ?, ?, ?, datetime('now'))
         """, (imagefile.filename, predicted_class, confidence, None, None))
         connection.commit()
 
@@ -126,6 +127,52 @@ def feedback_submit():
 @app.route('/images/<filename>')
 def send_image(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+@app.route('/dashboard')
+def dashboard():
+    """Display analytics dashboard with descriptive summaries."""
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    # Bar chart — count predictions per class
+    cursor.execute("SELECT predicted_class, COUNT(*) FROM predictions GROUP BY predicted_class")
+    class_data = cursor.fetchall()
+    labels = [row[0] for row in class_data]
+    counts = [row[1] for row in class_data]
+
+    # Pie chart — correct vs incorrect predictions
+    cursor.execute("""
+        SELECT 
+            SUM(CASE WHEN correct_prediction = 1 THEN 1 ELSE 0 END) AS correct,
+            SUM(CASE WHEN correct_prediction = 0 THEN 1 ELSE 0 END) AS incorrect
+        FROM predictions
+    """)
+    result = cursor.fetchone()
+    correct = result[0] or 0
+    incorrect = result[1] or 0
+
+    # Line chart — predictions by day (based on timestamp)
+    cursor.execute("""
+        SELECT strftime('%Y-%m-%d', timestamp) AS date, COUNT(*) 
+        FROM predictions
+        GROUP BY date
+        ORDER BY date ASC
+    """)
+    daily_data = cursor.fetchall()
+    dates = [row[0] for row in daily_data]
+    daily_counts = [row[1] for row in daily_data]
+
+    conn.close()
+
+    return render_template(
+        'dashboard.html',
+        labels=labels,
+        counts=counts,
+        correct=correct,
+        incorrect=incorrect,
+        dates=dates,
+        daily_counts=daily_counts
+    )
 
 if __name__ == '__main__':
     print("Upload folder path:", UPLOAD_FOLDER)

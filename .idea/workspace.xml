@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Updated to store predictions into DB">
-      <change afterPath="$PROJECT_DIR$/templates/feedback.html" afterDir="false" />
+    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Updated to store correct classification into DB if the prediction is incorrect">
+      <change afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/feedback.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -134,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1760830753615</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updated to store correct classification into DB if the prediction is incorrect">
+      <option name="closed" value="true" />
+      <created>1761437636732</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1761437636732</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -154,6 +163,7 @@
     <MESSAGE value="Updates Frontend to include picture of uploaded image" />
     <MESSAGE value="Adds db initialization" />
     <MESSAGE value="Updated to store predictions into DB" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to store predictions into DB" />
+    <MESSAGE value="Updated to store correct classification into DB if the prediction is incorrect" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to store correct classification into DB if the prediction is incorrect" />
   </component>
 </project>

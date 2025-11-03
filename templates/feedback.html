@@ -43,8 +43,11 @@
           <option value="Pneumonia">Pneumonia</option>
           <option value="Tuberculosis">Tuberculosis</option>
         </select>
-        <br><br>
         <button type="submit" name="feedback" value="no" id="submitCorrection">Submit Correction</button>
+        <br>
+        <a href="{{ url_for('dashboard') }}">
+          <button type="button">📊 Go to Dashboard</button>
+        </a>
       </div>
     </form>
   </div>
