@@ -24,9 +24,12 @@
 
     <form action="/" method="post" enctype="multipart/form-data">
       <input type="file" name="imagefile" accept="image/*" required>
-      <br><br>
+      <br>
       <button type="submit">Predict</button>
-      <a href="/dashboard">⬅ View Dashboard</a>
+      <br>
+      <a href="{{ url_for('dashboard') }}">
+        <button type="button">Dashboard</button>
+      </a>
     </form>
   </div>
 </body>

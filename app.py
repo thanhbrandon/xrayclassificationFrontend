@@ -130,49 +130,59 @@ def send_image(filename):
 
 @app.route('/dashboard')
 def dashboard():
-    """Display analytics dashboard with descriptive summaries."""
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    # Connect to DB
+    with sqlite3.connect(DB_PATH) as connection:
+        cursor = connection.cursor()
 
-    # Bar chart — count predictions per class
-    cursor.execute("SELECT predicted_class, COUNT(*) FROM predictions GROUP BY predicted_class")
-    class_data = cursor.fetchall()
-    labels = [row[0] for row in class_data]
-    counts = [row[1] for row in class_data]
+        # 1️⃣ Accuracy Over Time – simulate or calculate from feedback
+        cursor.execute("""
+            SELECT id, correct_prediction
+            FROM predictions
+            WHERE correct_prediction IS NOT NULL
+            ORDER BY id
+        """)
+        records = cursor.fetchall()
+        if records:
+            cumulative_correct = 0
+            accuracy_over_time = []
+            for i, (_, correct) in enumerate(records, start=1):
+                if correct == 1:
+                    cumulative_correct += 1
+                accuracy = round((cumulative_correct / i) * 100, 2)
+                accuracy_over_time.append(accuracy)
+        else:
+            accuracy_over_time = []
 
-    # Pie chart — correct vs incorrect predictions
-    cursor.execute("""
-        SELECT 
-            SUM(CASE WHEN correct_prediction = 1 THEN 1 ELSE 0 END) AS correct,
-            SUM(CASE WHEN correct_prediction = 0 THEN 1 ELSE 0 END) AS incorrect
-        FROM predictions
-    """)
-    result = cursor.fetchone()
-    correct = result[0] or 0
-    incorrect = result[1] or 0
+        # 2️⃣ Prediction Distribution (per disease class)
+        cursor.execute("""
+            SELECT predicted_class, COUNT(*) 
+            FROM predictions
+            GROUP BY predicted_class
+        """)
+        dist_data = cursor.fetchall()
+        labels = [row[0] for row in dist_data]
+        counts = [row[1] for row in dist_data]
 
-    # Line chart — predictions by day (based on timestamp)
-    cursor.execute("""
-        SELECT strftime('%Y-%m-%d', timestamp) AS date, COUNT(*) 
-        FROM predictions
-        GROUP BY date
-        ORDER BY date ASC
-    """)
-    daily_data = cursor.fetchall()
-    dates = [row[0] for row in daily_data]
-    daily_counts = [row[1] for row in daily_data]
-
-    conn.close()
+        # 3️⃣ Feedback Summary (correct vs incorrect)
+        cursor.execute("""
+            SELECT correct_prediction, COUNT(*) 
+            FROM predictions
+            WHERE correct_prediction IS NOT NULL
+            GROUP BY correct_prediction
+        """)
+        feedback_data = cursor.fetchall()
+        feedback_labels = ["Correct" if row[0] == 1 else "Incorrect" for row in feedback_data]
+        feedback_counts = [row[1] for row in feedback_data]
 
     return render_template(
         'dashboard.html',
-        labels=labels,
-        counts=counts,
-        correct=correct,
-        incorrect=incorrect,
-        dates=dates,
-        daily_counts=daily_counts
+        accuracy_over_time=accuracy_over_time,
+        dist_labels=labels,
+        dist_counts=counts,
+        feedback_labels=feedback_labels,
+        feedback_counts=feedback_counts
     )
+
 
 if __name__ == '__main__':
     print("Upload folder path:", UPLOAD_FOLDER)

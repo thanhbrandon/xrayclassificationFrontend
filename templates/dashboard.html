@@ -3,42 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prediction Dashboard</title>
+  <title>Dashboard – X-Ray Classifier</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
-    table { margin: 20px auto; border-collapse: collapse; width: 90%; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background-color: #2d89ef; color: white; }
-    tr:nth-child(even) { background-color: #f2f2f2; }
-    a button { background-color: #2d89ef; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
-    a button:hover { background-color: #1b6edb; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+    .container {
+      max-width: 900px;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: auto;
+    }
+    canvas {
+      margin: 30px 0;
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+    }
+    a.button {
+      background-color: #2d89ef;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
-  <h1>📊 Prediction Dashboard</h1>
-  <table>
-    <tr>
-      <th>Filename</th>
-      <th>Prediction</th>
-      <th>Confidence (%)</th>
-      <th>Correct?</th>
-      <th>Correct Class</th>
-      <th>Timestamp</th>
-    </tr>
-    {% for row in data %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ '✅' if row[3] == 1 else ('❌' if row[3] == 0 else '-') }}</td>
-      <td>{{ row[4] if row[4] else '-' }}</td>
-      <td>{{ row[5] }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+  <div class="container">
+    <h1>📊 Model Performance Dashboard</h1>
+    <a class="button" href="/">← Back to Classifier</a>
 
-  <a href="{{ url_for('index') }}">
-    <button type="button">⬅️ Back to Upload</button>
-  </a>
+    <h2>1️⃣ Accuracy Over Time</h2>
+    <canvas id="accuracyChart"></canvas>
+
+    <h2>2️⃣ Prediction Distribution</h2>
+    <canvas id="distributionChart"></canvas>
+
+    <h2>3️⃣ Feedback Summary</h2>
+    <canvas id="feedbackChart"></canvas>
+  </div>
+
+  <script>
+    // Accuracy Over Time
+    const accuracyData = {{ accuracy_over_time|tojson }};
+    new Chart(document.getElementById('accuracyChart'), {
+      type: 'line',
+      data: {
+        labels: accuracyData.map((_, i) => i + 1),
+        datasets: [{
+          label: 'Accuracy (%)',
+          data: accuracyData,
+          borderColor: '#2d89ef',
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+
+    // Prediction Distribution (Pie)
+    new Chart(document.getElementById('distributionChart'), {
+      type: 'pie',
+      data: {
+        labels: {{ dist_labels|tojson }},
+        datasets: [{
+          data: {{ dist_counts|tojson }},
+          backgroundColor: ['#0078D7', '#2ECC71', '#E67E22', '#E74C3C']
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    // Feedback Summary (Bar)
+    new Chart(document.getElementById('feedbackChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ feedback_labels|tojson }},
+        datasets: [{
+          label: 'Number of Predictions',
+          data: {{ feedback_counts|tojson }},
+          backgroundColor: ['#2ECC71', '#E74C3C']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  </script>
 </body>
 </html>
