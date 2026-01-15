@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Updated to include button to access the dashboard from the index page">
+    <list default="true" id="8fbe988b-61cc-4fb7-af68-8eaaa7a9e9c3" name="Changes" comment="Update dashboard page to add three dynamic charts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard.html" afterDir="false" />
@@ -151,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762140784755</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Update dashboard page to add three dynamic charts">
+      <option name="closed" value="true" />
+      <created>1762650378398</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1762650378398</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,6 +181,7 @@
     <MESSAGE value="Updated to store predictions into DB" />
     <MESSAGE value="Updated to store correct classification into DB if the prediction is incorrect" />
     <MESSAGE value="Updated to include button to access the dashboard from the index page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to include button to access the dashboard from the index page" />
+    <MESSAGE value="Update dashboard page to add three dynamic charts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update dashboard page to add three dynamic charts" />
   </component>
 </project>

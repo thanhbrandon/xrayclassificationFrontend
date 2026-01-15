@@ -2,70 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prediction Feedback – X-Ray Classifier</title>
+
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
-    .container { max-width: 700px; background: white; padding: 25px; border-radius: 10px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    button { background-color: #2d89ef; color: white; border: none; padding: 10px 16px; border-radius: 5px; cursor: pointer; margin: 6px; }
-    button:hover { background-color: #1b6edb; }
-    select { padding: 8px; margin-top: 8px; }
-    .error { color: red; margin-top: 10px; }
-    .correction { display:none; margin-top: 12px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 700px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #2d89ef;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      background-color: #2d89ef;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 6px;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background-color: #1b6edb;
+    }
+
+    select {
+      padding: 8px;
+      margin-top: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .correction {
+      display: none;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    a.button-link {
+      text-decoration: none;
+    }
+
+    .back-button {
+      background-color: #6c757d;
+    }
+
+    .back-button:hover {
+      background-color: #5a6268;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Prediction Feedback</h1>
 
+    <!-- Error Message (if user forgets to select a class when required) -->
     {% if error %}
       <p class="error">{{ error }}</p>
     {% endif %}
 
+    <!-- Prediction Details -->
     <p><strong>Prediction:</strong> {{ prediction }} ({{ confidence }}%)</p>
-    <img src="{{ url_for('send_image', filename=filename) }}" alt="Uploaded X-ray" style="max-width:100%; border-radius:8px;">
 
+    <!-- Display uploaded X-ray -->
+    <img src="{{ url_for('send_image', filename=filename) }}" alt="Uploaded chest X-ray">
+
+    <!-- Feedback Form -->
     <form id="feedbackForm" action="/feedback" method="post">
+      <!-- Hidden fields to keep track of context -->
       <input type="hidden" name="filename" value="{{ filename }}">
       <input type="hidden" name="prediction" value="{{ prediction }}">
       <input type="hidden" name="confidence" value="{{ confidence }}">
 
       <p>Was this prediction correct?</p>
+
+      <!-- Feedback Buttons -->
       <button type="submit" name="feedback" value="yes" id="yesBtn">✅ Yes</button>
       <button type="button" id="noBtn">❌ No</button>
 
+      <!-- Correction Section (only appears if user clicks "No") -->
       <div id="correctionSection" class="correction" aria-hidden="true">
-        <label for="correct_class">Select the correct class:</label><br>
-        <select name="correct_class" id="correct_class" disabled>
+        <label for="correct_class"><strong>Select the correct class:</strong></label><br>
+        <select name="correct_class" id="correct_class" disabled required>
           <option value="">-- Select class --</option>
           <option value="COVID-19">COVID-19</option>
           <option value="Normal">Normal</option>
           <option value="Pneumonia">Pneumonia</option>
           <option value="Tuberculosis">Tuberculosis</option>
         </select>
-        <button type="submit" name="feedback" value="no" id="submitCorrection">Submit Correction</button>
-        <br>
-        <a href="{{ url_for('dashboard') }}">
-          <button type="button">Dashboard</button>
-        </a>
+        <br><br>
+        <button type="submit" name="feedback" value="no">Submit Correction</button>
       </div>
+
+      <br>
+      <!-- Optional navigation to dashboard -->
+      <a class="button-link" href="{{ url_for('dashboard') }}">
+        <button type="button" class="back-button">View Dashboard</button>
+      </a>
     </form>
   </div>
 
+  <!-- Client-side interactivity -->
   <script>
     const noBtn = document.getElementById('noBtn');
     const correctionSection = document.getElementById('correctionSection');
     const correctSelect = document.getElementById('correct_class');
 
-    noBtn.addEventListener('click', function () {
+    // When "No" is clicked → show correction dropdown
+    noBtn.addEventListener('click', () => {
       correctionSection.style.display = 'block';
       correctionSection.setAttribute('aria-hidden', 'false');
       correctSelect.disabled = false;
       correctSelect.focus();
     });
 
-    // defensive: keep select disabled until user clicks No
-    window.addEventListener('load', function () {
+    // Ensure dropdown is initially disabled until user clicks "No"
+    window.addEventListener('load', () => {
       correctSelect.disabled = true;
     });
   </script>

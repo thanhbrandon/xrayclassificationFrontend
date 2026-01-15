@@ -4,31 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chest X-Ray Classifier</title>
+
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; text-align: center; padding: 40px; }
-    .container { max-width: 600px; background: white; padding: 25px; border-radius: 10px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    button { background-color: #2d89ef; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-    button:hover { background-color: #1b6edb; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #2d89ef;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 80%;
+    }
+
+    button {
+      background-color: #2d89ef;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      margin: 8px;
+    }
+
+    button:hover {
+      background-color: #1b6edb;
+    }
+
+    .dashboard-btn {
+      background-color: #6c757d;
+    }
+
+    .dashboard-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .message {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Chest X-Ray Classifier</h1>
 
+    <!-- Feedback messages -->
     {% if error %}
-      <p style="color: red;">{{ error }}</p>
+      <p class="message error">{{ error }}</p>
     {% endif %}
     {% if message %}
-      <p style="color: green;">{{ message }}</p>
+      <p class="message success">{{ message }}</p>
     {% endif %}
 
+    <!-- Upload Form -->
     <form action="/" method="post" enctype="multipart/form-data">
-      <input type="file" name="imagefile" accept="image/*" required>
+      <label for="imagefile"><strong>Upload a Chest X-ray Image:</strong></label><br>
+      <input type="file" id="imagefile" name="imagefile" accept="image/*" required>
       <br>
       <button type="submit">Predict</button>
-      <br>
       <a href="{{ url_for('dashboard') }}">
-        <button type="button">Dashboard</button>
+        <button type="button" class="dashboard-btn">Dashboard</button>
       </a>
     </form>
   </div>

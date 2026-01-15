@@ -4,29 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard – X-Ray Classifier</title>
+
+  <!-- Load Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
+    /* --- General Page Layout --- */
     body {
       font-family: Arial, sans-serif;
       background: #f5f7fa;
       color: #333;
       text-align: center;
       padding: 40px;
+      margin: 0;
     }
+
     .container {
       max-width: 900px;
       background: white;
       padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       margin: auto;
     }
-    canvas {
-      margin: 30px 0;
-      width: 100%;
-      max-width: 800px;
-      height: 400px;
-    }
+
+    /* --- Button Styling --- */
     a.button {
       background-color: #2d89ef;
       color: white;
@@ -35,26 +37,51 @@
       border-radius: 5px;
       display: inline-block;
       margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+    a.button:hover {
+      background-color: #1b6edb;
+    }
+
+    /* --- Chart Styling --- */
+    canvas {
+      margin: 30px 0;
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+    }
+
+    h1, h2 {
+      color: #2d89ef;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📊 Model Performance Dashboard</h1>
+    <h1>Model Performance Dashboard</h1>
     <a class="button" href="/">← Back to Classifier</a>
 
-    <h2>1️⃣ Accuracy Over Time</h2>
-    <canvas id="accuracyChart"></canvas>
+    <!-- Chart 1: Accuracy Over Time -->
+    <h2>Accuracy Over Time</h2>
+    <canvas id="accuracyChart" aria-label="Accuracy Over Time Line Chart"></canvas>
 
-    <h2>2️⃣ Prediction Distribution</h2>
-    <canvas id="distributionChart"></canvas>
+    <!-- Chart 2: Prediction Distribution -->
+    <h2>Prediction Distribution</h2>
+    <canvas id="distributionChart" aria-label="Prediction Distribution Pie Chart"></canvas>
 
-    <h2>3️⃣ Feedback Summary</h2>
-    <canvas id="feedbackChart"></canvas>
+    <!-- Chart 3: Feedback Summary -->
+    <h2>Feedback Summary</h2>
+    <canvas id="feedbackChart" aria-label="Feedback Summary Bar Chart"></canvas>
   </div>
 
   <script>
-    // Accuracy Over Time
+    // --- Chart 1: Accuracy Over Time ---
     const accuracyData = {{ accuracy_over_time|tojson }};
     new Chart(document.getElementById('accuracyChart'), {
       type: 'line',
@@ -64,40 +91,66 @@
           label: 'Accuracy (%)',
           data: accuracyData,
           borderColor: '#2d89ef',
-          fill: false,
+          backgroundColor: 'rgba(45, 137, 239, 0.1)',
+          fill: true,
           tension: 0.2
         }]
       },
-      options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'Model Accuracy Over Time', color: '#333' },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100, title: { display: true, text: 'Accuracy (%)' } },
+          x: { title: { display: true, text: 'Prediction Number' } }
+        }
+      }
     });
 
-    // Prediction Distribution (Pie)
+    // --- Chart 2: Prediction Distribution ---
     new Chart(document.getElementById('distributionChart'), {
       type: 'pie',
       data: {
         labels: {{ dist_labels|tojson }},
         datasets: [{
           data: {{ dist_counts|tojson }},
-          backgroundColor: ['#0078D7', '#2ECC71', '#E67E22', '#E74C3C']
+          backgroundColor: ['#0078D7', '#2ECC71', '#E67E22', '#E74C3C'],
+          borderWidth: 1
         }]
       },
-      options: { responsive: true }
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'Prediction Distribution by Class', color: '#333' },
+          legend: { position: 'bottom' }
+        }
+      }
     });
 
-    // Feedback Summary (Bar)
+    // --- Chart 3: Feedback Summary ---
     new Chart(document.getElementById('feedbackChart'), {
       type: 'bar',
       data: {
         labels: {{ feedback_labels|tojson }},
         datasets: [{
-          label: 'Number of Predictions',
+          label: ' ',
           data: {{ feedback_counts|tojson }},
-          backgroundColor: ['#2ECC71', '#E74C3C']
+          backgroundColor: ['#E74C3C','#2ECC71']
         }]
       },
       options: {
         responsive: true,
-        scales: { y: { beginAtZero: true } }
+        plugins: {
+          legend: { display: false},
+          title: { display: true, text: 'User Feedback Summary', color: '#333' },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: 'Count' } },
+          x: { title: { display: true, text: 'Feedback Type' } }
+        }
       }
     });
   </script>
